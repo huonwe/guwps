@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./static/css/front.css">
+    <link rel="stylesheet" href="./static/css/control.css">
+	<script src="./static/js/front.js"></script>
+
+    <title>front</title>
+</head>
+<body>
+    <div>
+        <div class="flex col fullscreen">
+            <div class="flex row center Toolbar" style="flex: 1;">
+                <div class="button">配置</div>
+                <div class="button">帮助</div>
+            </div>
+            <div class="flex row" style="flex: 20;">
+                <div class="flex col Sidebar" style="flex: 1;">
+                    <div class="button">终端设备</div>
+                    <div class="button">控制页面</div>
+                    <div class="button">交换面板</div>
+                </div>
+                <div class="flex col" style="flex: 4;">
+                    <div id="topContent" class="content flex col">
+                        <div class="contentTitle">终端设备:</div>
+                        <div id="topCttBody" class="contentBody">
+
+                        </div>
+
+                    </div>
+                    <div id="middleContent" class="content flex col">
+                        <div class="contentTitle">接收:</div>
+                        <div class="contentBody"></div>
+                    </div>
+                    <div id="bottomContent" class="content flex col">
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <script>
+        const doms = {
+            topCtt : document.getElementById("topContent"),
+            middleCtt : document.getElementById("middleContent"),
+            bottomCtt : document.getElementById("bottomContent"),
+            topCttBody : document.getElementById("topCttBody"),
+
+        }
+
+        const record = new WebSocket("ws://172.29.131.191:8080/msgRecord")
+        record.addEventListener('open',function(e){
+            console.log("open success")
+        })
+        record.addEventListener('message',function(e){
+
+            let msgLine = document.createElement("div")
+            msgLine.innerText = showtime() + " " + e.data
+            doms.middleCtt.lastElementChild.appendChild(msgLine)
+            let lines = doms.middleCtt.lastElementChild
+            if(lines.childElementCount >= 200){
+                lines.firstElementChild.remove()
+            }
+        })
+
+        const devicesStatus = new WebSocket("ws://172.29.131.191:8080/devices")
+        devicesStatus.addEventListener('message',function(e){
+            // console.log(e.data)
+            devices = JSON.parse(e.data)
+            try{
+                if(devices.length == 0) return;
+            }catch{
+                topCttBody.innerHTML = "还没有设备连接哦"
+                return
+            }
+            let table = document.createElement("table")
+            table.border = "1"
+            table.id = "devicesList"
+            let heads = document.createElement("tr")
+            for(key in devices[0]){
+                let head = document.createElement("th")
+                head.innerText = key
+                heads.appendChild(head)
+            }
+            table.appendChild(heads)
+            devices.forEach(element => {
+                let deviceLine = document.createElement("tr")
+                for(key in element){
+                    let tag = document.createElement("td")
+                    tag.innerText = element[key]
+                    deviceLine.appendChild(tag)
+                }
+                table.appendChild(deviceLine)
+            });
+            let container = document.createElement("div")
+            container.appendChild(table)
+            topCttBody.innerHTML = container.innerHTML
+        })
+    </script>
+</body>
+</html>

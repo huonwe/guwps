@@ -1,0 +1,14 @@
+.button {
+    /* width: 20px;
+    height: 20px; */
+    background-color: whitesmoke;
+    border: 0.1px solid rgba(0, 0, 0, 0.5);
+    text-align: center;
+    font-weight: bold;  
+    font-size: larger;
+}
+
+.button:hover {
+    cursor: pointer;
+    background-color: gray;
+}
