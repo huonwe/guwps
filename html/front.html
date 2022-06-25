@@ -45,6 +45,7 @@
         </div>
     </div>
     <script>
+        const server = "172.28.142.51:8080"
         const doms = {
             topCtt : document.getElementById("topContent"),
             middleCtt : document.getElementById("middleContent"),
@@ -53,7 +54,7 @@
 
         }
 
-        const record = new WebSocket("ws://172.29.131.191:8080/msgRecord")
+        const record = new WebSocket("ws:/"+server+"/msgRecord")
         record.addEventListener('open',function(e){
             console.log("open success")
         })
@@ -68,7 +69,7 @@
             }
         })
 
-        const devicesStatus = new WebSocket("ws://172.29.131.191:8080/devices")
+        const devicesStatus = new WebSocket("ws://"+server+"/devices")
         devicesStatus.addEventListener('message',function(e){
             // console.log(e.data)
             devices = JSON.parse(e.data)

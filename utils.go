@@ -14,7 +14,7 @@ func PRead(data []byte) *UDPData {
 	r := new(UDPData)
 
 	r.Length, err = strconv.ParseUint(s[0:4], 10, 32)
-	if err != nil {
+	if err != nil || r.Length < 41 {
 		fmt.Println("parse uint failed")
 		return nil
 	}

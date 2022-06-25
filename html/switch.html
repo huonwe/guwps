@@ -26,6 +26,8 @@
     var socket;
     var TTL;
     var remoteSWStatus
+
+    const host = "ws://172.29.142.51:8080/switcher";
     // window.onerror=function (message) {
     //     try{
     //         console.log(message);
@@ -59,7 +61,7 @@
 
     //连接websocket
     function connect() {
-        var host = "ws://172.29.131.191:8080/switcher";
+        
         socket = new ReconnectingWebSocket(host);
         try {
             socket.onopen = function(msg) {
