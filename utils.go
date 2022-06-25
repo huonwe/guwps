@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"net"
 	"strconv"
 )
 
@@ -38,4 +39,21 @@ func UUIDGenerate(s string) string {
 	// hs := fmt.Sprintf("%x", h.Sum(nil))
 	hashValue := hex.EncodeToString(hashInBytes)
 	return hashValue
+}
+
+func LocalHost() (string, error) {
+	addrs, err := net.InterfaceAddrs()
+	if err != nil {
+		// fmt.Println(err)
+		return "", err
+	}
+	for _, value := range addrs {
+		if ipnet, ok := value.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
+			if ipnet.IP.To4() != nil {
+				// fmt.Print(ipnet.IP.String())
+				return ipnet.IP.String(), nil
+			}
+		}
+	}
+	return "", fmt.Errorf("failed")
 }
