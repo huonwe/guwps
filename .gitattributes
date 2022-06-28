@@ -1,4 +1,0 @@
-*.scss linguist-detectable=false
-*.min.js linguist-detectable=false
-*.min.css linguist-detectable=false
-JustGage.js linguist-detectable=false
